@@ -22,27 +22,44 @@ const FailModal = ({ onClose, dataF }) => {
                     <View>
                         <Text style={styles.modalformHeading}>Kiểm soát khi vào</Text>
                         <View style={styles.MainCont}>
-                            <View style={{...styles.MainContCard, justifyContent: 'center'}}>
-                                <Text style={{
-                                    color: Colors.DEFAULT_RED,
-                                    fontWeight: '600',
-                                    letterSpacing: 1,
-                                    fontSize: 18,
-                                    textAlign: 'center'
-                                }}>{dataF.messsage}</Text>
+                            <View style={{ ...styles.MainContCard, justifyContent: 'center' }}>
+                                {dataF?.data?.message ? (
+                                    <Text style={{
+                                        color: Colors.DEFAULT_RED,
+                                        fontWeight: '600',
+                                        letterSpacing: 1,
+                                        fontSize: 18,
+                                        textAlign: 'center'
+                                    }}>{dataF.data.message}</Text>
+                                ) : (
+                                    <Text style={{
+                                        color: Colors.DEFAULT_RED,
+                                        fontWeight: '600',
+                                        letterSpacing: 1,
+                                        fontSize: 18,
+                                        textAlign: 'center'
+                                    }}>{dataF.message}</Text>
+                                )}
+
                             </View>
-                            <View style={styles.MainContCard}>
-                                <Text style={styles.MainContTextL}>Ngày đăng ký vào</Text>
-                                <Text style={styles.MainContTextR}>{moment(dataF.checkInDate).format('DD/MM/YYYY hh:mm:ss A')}</Text>
-                            </View>
-                            <View style={styles.MainContCard}>
-                                <Text style={styles.MainContTextL}>Ngày bắt đầu</Text>
-                                <Text style={styles.MainContTextR}>{moment(dataF.startDate).format('DD/MM/YYYY hh:mm:ss A')}</Text>
-                            </View>
-                            <View style={styles.MainContCard}>
-                                <Text style={styles.MainContTextL}>Ngày kết thúc</Text>
-                                <Text style={styles.MainContTextR}>{moment(dataF.endDate).format('DD/MM/YYYY hh:mm:ss A')}</Text>
-                            </View>
+                            {dataF?.data?.checkInDate && (
+                                <View style={styles.MainContCard}>
+                                    <Text style={styles.MainContTextL}>Ngày kiểm tra vào</Text>
+                                    <Text style={styles.MainContTextR}>{moment(dataF.data.checkInDate).format('DD/MM/YYYY hh:mm:ss A')}</Text>
+                                </View>
+                            )}
+                            {dataF?.data?.startDate && (
+                                <View style={styles.MainContCard}>
+                                    <Text style={styles.MainContTextL}>Ngày bắt đầu</Text>
+                                    <Text style={styles.MainContTextR}>{moment(dataF.data.startDate).format('DD/MM/YYYY hh:mm:ss A')}</Text>
+                                </View>
+                            )}
+                            {dataF?.data?.endDate && (
+                                <View style={styles.MainContCard}>
+                                    <Text style={styles.MainContTextL}>Ngày kết thúc</Text>
+                                    <Text style={styles.MainContTextR}>{moment(dataF.data.endDate).format('DD/MM/YYYY hh:mm:ss A')}</Text>
+                                </View>
+                            )}
                             <TouchableOpacity style={styles.btnCommon1} onPress={onClose}>
                                 <Text style={styles.btnTextCommon1}>Xác nhận</Text>
                             </TouchableOpacity>
@@ -85,7 +102,7 @@ const styles = StyleSheet.create({
         backgroundColor: Colors.DEFAULT_RED,
         position: 'absolute',
         left: '45%',
-        top: '-25%',
+        top: -40,
         borderRadius: 100,
         justifyContent: 'center',
         zIndex: 1,
@@ -104,7 +121,8 @@ const styles = StyleSheet.create({
         borderBottomWidth: 1,
         borderBottomColor: '#ccc',
         borderStyle: 'solid',
-        textAlign: 'center'
+        textAlign: 'center',
+        paddingTop: 20
     },
     MainCont: {
         marginTop: 10,

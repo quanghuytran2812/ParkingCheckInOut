@@ -28,20 +28,26 @@ const SuccessModal = ({ onClose, dataS }) => {
                                     fontWeight: '600',
                                     letterSpacing: 1,
                                     fontSize: 18
-                                }}>{dataS.messsage}</Text>
+                                }}>{dataS.data.message}</Text>
                             </View>
-                            <View style={styles.MainContCard}>
-                                <Text style={styles.MainContTextL}>Ngày đăng ký vào</Text>
-                                <Text style={styles.MainContTextR}>{moment(dataS.checkInDate).format('DD/MM/YYYY hh:mm:ss A')}</Text>
-                            </View>
-                            <View style={styles.MainContCard}>
-                                <Text style={styles.MainContTextL}>Ngày bắt đầu</Text>
-                                <Text style={styles.MainContTextR}>{moment(dataS.startDate).format('DD/MM/YYYY hh:mm:ss A')}</Text>
-                            </View>
-                            <View style={styles.MainContCard}>
-                                <Text style={styles.MainContTextL}>Ngày kết thúc</Text>
-                                <Text style={styles.MainContTextR}>{moment(dataS.endDate).format('DD/MM/YYYY hh:mm:ss A')}</Text>
-                            </View>
+                            {dataS.data.checkInDate && (
+                                <View style={styles.MainContCard}>
+                                    <Text style={styles.MainContTextL}>Ngày kiểm tra vào</Text>
+                                    <Text style={styles.MainContTextR}>{moment(dataS.data.checkInDate).format('DD/MM/YYYY hh:mm:ss A')}</Text>
+                                </View>
+                            )}
+                            {dataS.data.startDate && (
+                                <View style={styles.MainContCard}>
+                                    <Text style={styles.MainContTextL}>Ngày bắt đầu</Text>
+                                    <Text style={styles.MainContTextR}>{moment(dataS.data.startDate).format('DD/MM/YYYY hh:mm:ss A')}</Text>
+                                </View>
+                            )}
+                            {dataS.data.endDate && (
+                                <View style={styles.MainContCard}>
+                                    <Text style={styles.MainContTextL}>Ngày kết thúc</Text>
+                                    <Text style={styles.MainContTextR}>{moment(dataS.data.endDate).format('DD/MM/YYYY hh:mm:ss A')}</Text>
+                                </View>
+                            )}
                             <TouchableOpacity style={styles.btnCommon1} onPress={onClose}>
                                 <Text style={styles.btnTextCommon1}>Xác nhận</Text>
                             </TouchableOpacity>

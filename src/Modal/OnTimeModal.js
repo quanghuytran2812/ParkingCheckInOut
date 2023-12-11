@@ -1,11 +1,11 @@
 import React, { memo } from 'react';
 import { View, TouchableOpacity, Text, StyleSheet, SafeAreaView } from 'react-native';
-import Ionicons from "react-native-vector-icons/Ionicons";
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { Colors } from '../contants';
+import moment from 'moment';
 
 
-const OnTimeModal = ({ onClose, dataF }) => {
+const OnTimeModal = ({ onClose, dataS }) => {
     const handleClick = (e) => {
         e.stopPropagation();
     };
@@ -14,21 +14,36 @@ const OnTimeModal = ({ onClose, dataF }) => {
         <SafeAreaView style={styles.ModalCommonoverlay}>
             <View onTouchStart={handleClick} style={styles.ModalCommonmodalContainer}>
                 <View style={styles.ModalCommonForm}>
-                    <View style={styles.Success}>
-                        <View style={styles.modalIcon}>
-                            <MaterialCommunityIcons
-                                name='alarm-check' size={60}
-                            />
-                        </View>
-                        <View style={styles.modalContent}>
-                            <View style={{marginBottom:10 , alignItems:'center'}}>
-                                <Text style={{fontSize:30, marginBottom:20}}> Được ra cổng </Text>
+                    <TouchableOpacity style={styles.closeBtn} onPress={onClose}>
+                        <MaterialCommunityIcons
+                            name='check-bold' size={60} color="#fff"
+                        />
+                    </TouchableOpacity>
+                    <View>
+                        <Text style={styles.modalformHeading}>Kiểm soát khi ra</Text>
+                        <View style={styles.MainCont}>
+                            <View style={{ ...styles.MainContCard, justifyContent: 'center' }}>
+                                <Text style={{
+                                    color: Colors.DEFAULT_GREEN,
+                                    fontWeight: '600',
+                                    letterSpacing: 1,
+                                    fontSize: 18
+                                }}>{dataS.data.message}</Text>
                             </View>
-                            <TouchableOpacity 
-                            style={{alignItems:'center' , justifyContent:'center', backgroundColor:Colors.DEFAULT_YELLOW , borderRadius:20, padding:15}}
-                            onPress={onClose}
-                            >
-                                <Text style={{fontSize:30 , color:Colors.DEFAULT_WHITE }}> Xác nhận </Text>
+                            {dataS.data.checkOutDate && (
+                                <View style={styles.MainContCard}>
+                                    <Text style={styles.MainContTextL}>Ngày kiểm tra ra</Text>
+                                    <Text style={styles.MainContTextR}>{moment(dataS.data.checkOutDate).format('DD/MM/YYYY hh:mm:ss A')}</Text>
+                                </View>
+                            )}
+                            {dataS.data.endDate && (
+                                <View style={styles.MainContCard}>
+                                    <Text style={styles.MainContTextL}>Ngày kết thúc</Text>
+                                    <Text style={styles.MainContTextR}>{moment(dataS.data.endDate).format('DD/MM/YYYY hh:mm:ss A')}</Text>
+                                </View>
+                            )}
+                            <TouchableOpacity style={styles.btnCommon1} onPress={onClose}>
+                                <Text style={styles.btnTextCommon1}>Xác nhận</Text>
                             </TouchableOpacity>
                         </View>
                     </View>
@@ -63,24 +78,67 @@ const styles = StyleSheet.create({
         borderRadius: 15,
         backgroundColor: 'white',
         elevation: 4,
+        position: 'relative',
     },
-    Success: {
-        justifyContent: 'center',
-        alignItems: 'center'
-    },
-    modalIcon: {
-        backgroundColor: Colors.DEFAULT_YELLOW,
-        height: 100,
-        width: 100,
+    closeBtn: {
+        backgroundColor: Colors.DEFAULT_GREEN,
+        position: 'absolute',
+        left: '45%',
+        top: '-25%',
         borderRadius: 100,
         justifyContent: 'center',
-        alignItems: 'center',
-        position: 'absolute',
-        top: -100
+        zIndex: 1,
+        height: 90,
+        width: 90,
+        alignItems: 'center'
     },
-    modalContent:{
-        paddingTop:20
-    }
+    modalformHeading: {
+        textTransform: 'uppercase',
+        fontSize: 16,
+        letterSpacing: 1,
+        fontWeight: '700',
+        lineHeight: 20,
+        color: '#333',
+        marginBottom: 20,
+        borderBottomWidth: 1,
+        borderBottomColor: '#ccc',
+        borderStyle: 'solid',
+        textAlign: 'center'
+    },
+    MainCont: {
+        marginTop: 10,
+    },
+    MainContCard: {
+        display: 'flex',
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        marginBottom: 20
+    },
+    MainContTextL: {
+        flex: 1,
+        color: '#6e6e6e'
+    },
+    MainContTextR: {
+        flex: 1,
+        fontWeight: '600',
+    },
+    btnCommon1: {
+        height: 40,
+        borderRadius: 5,
+        backgroundColor: Colors.DEFAULT_GREEN,
+        shadowColor: '#000',
+        shadowOffset: { width: 4, height: 5 },
+        shadowOpacity: 0.27,
+        shadowRadius: -3,
+        elevation: 4,
+        alignItems: 'center',
+        justifyContent: 'center',
+    },
+    btnTextCommon1: {
+        color: '#fcfcfc',
+        fontWeight: 'bold',
+        fontSize: 17,
+    },
 })
 
 export default memo(OnTimeModal)

@@ -1,56 +1,107 @@
-import React, { useState, useEffect } from 'react';
-import { View, Text, Modal, Button } from 'react-native';
+import { StatusBar } from 'expo-status-bar';
+import { StyleSheet, Text, View, Button, SafeAreaView, Modal } from 'react-native';
+import React, { useEffect, useState } from 'react';
 import { BarCodeScanner } from 'expo-barcode-scanner';
-import OverTimeModal from '../Modal/OverTimeModal';
+import { useDispatch } from 'react-redux';
 import OnTimeModal from '../Modal/OnTimeModal';
+import OverTimeModal from '../Modal/OverTimeModal';
+import { apiCheckOut } from '../store/checkInSlice';
 
 const CheckOutScreen = () => {
-    const [openModal1, setOpenModal1] = useState(false);
-    const [hasPermission, setHasPermission] = useState(null);
-    const [scanned, setScanned] = useState(false);
+    const dispatch = useDispatch();
+    const [openModal, setOpenModal] = useState(false);
+    const [openModalF, setOpenModalF] = useState(false);
+
+    const [data, setData] = useState({});
+    const [hasPermission, setHasPermission] = React.useState(false);
+    const [scanData, setScanData] = React.useState();
 
     useEffect(() => {
         (async () => {
             const { status } = await BarCodeScanner.requestPermissionsAsync();
-            setHasPermission(status === 'granted');
+            setHasPermission(status === "granted");
         })();
     }, []);
 
-    const handleBarCodeScanned = ({ data }) => {
-        setScanned(true);
-        // Implement your check-out logic here using the scanned QR code data
-        alert(`Check-out successful with code: ${data}`);
+    if (!hasPermission) {
+        return (
+            <View style={styles.container}>
+                <Text>Please grant camera permissions to app.</Text>
+            </View>
+        );
+    }
+
+    const handleBarCodeScanned = ({ type, data }) => {
+        setScanData(data);
+        if (data) {
+            dispatch(apiCheckOut(data))
+                .then((result) => {
+                    if (result.payload.statusCode === 200) {
+                        setData(result.payload)
+                        setOpenModal(true)
+                    } else {
+                        setData(result.payload)
+                        setOpenModalF(true)
+                    }
+                })
+                .catch((error) => {
+                    console.log(error)
+                });
+        }
     };
 
-    if (hasPermission === null) {
-        return <Text>Requesting for camera permission</Text>;
-    }
-    if (hasPermission === false) {
-        return <Text>No access to camera</Text>;
-    }
-
     return (
-        <View style={{ flex: 1 }}>
+        <SafeAreaView style={styles.container}>
             <BarCodeScanner
-                style={{ width: 490, height: 300, alignItems: 'center', justifyContent: 'center' }}
-                onBarCodeScanned={scanned ? undefined : handleBarCodeScanned}
+                style={StyleSheet.absoluteFillObject}
+                onBarCodeScanned={scanData ? undefined : handleBarCodeScanned}
             />
-            <View style={{ padding: 30 }}>
-                <Button
-                    title="Check ra cổng"
-                    onPress={() => setOpenModal1(true)}
-                />
-            </View>
+            {scanData && 
+            <View style={styles.buttonAgain}>
+                <Button title='Scan Again?' color="#fff" onPress={() => setScanData(undefined)} />
+            </View>}
+            <StatusBar style="auto" />
             <Modal
                 transparent={true}
                 animationType='fade'
-                visible={openModal1}>
+                visible={openModal}>
                 <OnTimeModal
-                    onClose={() => setOpenModal1(false)}
+                    onClose={() => setOpenModal(false)}
+                    dataS={data}
                 />
             </Modal>
-        </View>
+            <Modal
+                transparent={true}
+                animationType='fade'
+                visible={openModalF}>
+                <OverTimeModal
+                    onClose={() => setOpenModalF(false)}
+                    dataF={data}
+                />
+            </Modal>
+        </SafeAreaView>
     );
-};
+}
 
+const styles = StyleSheet.create({
+    container: {
+        flex: 1,
+        backgroundColor: '#fff',
+        alignItems: 'center',
+        justifyContent: 'center',
+    },
+    buttonAgain: {
+        height: 40,
+        borderRadius: 5,
+        backgroundColor: '#02aab0',
+        shadowColor: '#02aab0',
+        shadowOffset: { width: 4, height: 5 },
+        shadowOpacity: 0.27,
+        shadowRadius: -3,
+        elevation: 4,
+        alignItems: 'center',
+        justifyContent: 'center',
+        marginTop: 20
+    }
+});
 export default CheckOutScreen;

@@ -1,8 +1,8 @@
 import React, { memo } from 'react';
 import { View, TouchableOpacity, Text, StyleSheet, SafeAreaView } from 'react-native';
-import Ionicons from "react-native-vector-icons/Ionicons";
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { Colors } from '../contants';
+import moment from 'moment';
 
 
 const OverTimeModal = ({ onClose, dataF }) => {
@@ -14,21 +14,48 @@ const OverTimeModal = ({ onClose, dataF }) => {
         <SafeAreaView style={styles.ModalCommonoverlay}>
             <View onTouchStart={handleClick} style={styles.ModalCommonmodalContainer}>
                 <View style={styles.ModalCommonForm}>
-                    <View style={styles.Success}>
-                        <View style={styles.modalIcon}>
-                            <MaterialCommunityIcons
-                                name='alarm-multiple' size={60}
-                            />
-                        </View>
-                        <View style={styles.modalContent}>
-                            <View style={{marginBottom:10 , alignItems:'center'}}>
-                                <Text style={{fontSize:30, marginBottom:20}}> Vượt thời gian ! </Text>
+                    <TouchableOpacity style={styles.closeBtn} onPress={onClose}>
+                        <MaterialCommunityIcons
+                            name='alert' size={60} color="#fff"
+                        />
+                    </TouchableOpacity>
+                    <View>
+                        <Text style={styles.modalformHeading}>Kiểm soát khi ra</Text>
+                        <View style={styles.MainCont}>
+                            <View style={{ ...styles.MainContCard, justifyContent: 'center' }}>
+                                {dataF?.data?.message ? (
+                                    <Text style={{
+                                        color: Colors.DEFAULT_RED,
+                                        fontWeight: '600',
+                                        letterSpacing: 1,
+                                        fontSize: 18,
+                                        textAlign: 'center'
+                                    }}>{dataF.data.message}</Text>
+                                ) : (
+                                    <Text style={{
+                                        color: Colors.DEFAULT_RED,
+                                        fontWeight: '600',
+                                        letterSpacing: 1,
+                                        fontSize: 18,
+                                        textAlign: 'center'
+                                    }}>{dataF.message}</Text>
+                                )}
+
                             </View>
-                            <TouchableOpacity 
-                            style={{alignItems:'center' , justifyContent:'center', backgroundColor:Colors.DEFAULT_RED , borderRadius:20, padding:15}}
-                            onPress={onClose}
-                            >
-                                <Text style={{fontSize:30 , color:Colors.DEFAULT_WHITE }}> Xác nhận </Text>
+                            {dataF?.data?.checkOutDate && (
+                                <View style={styles.MainContCard}>
+                                    <Text style={styles.MainContTextL}>Ngày kiểm tra ra</Text>
+                                    <Text style={styles.MainContTextR}>{moment(dataF.data.checkOutDate).format('DD/MM/YYYY hh:mm:ss A')}</Text>
+                                </View>
+                            )}
+                            {dataF?.data?.endDate && (
+                                <View style={styles.MainContCard}>
+                                    <Text style={styles.MainContTextL}>Ngày kết thúc</Text>
+                                    <Text style={styles.MainContTextR}>{moment(dataF.data.endDate).format('DD/MM/YYYY hh:mm:ss A')}</Text>
+                                </View>
+                            )}
+                            <TouchableOpacity style={styles.btnCommon1} onPress={onClose}>
+                                <Text style={styles.btnTextCommon1}>Xác nhận</Text>
                             </TouchableOpacity>
                         </View>
                     </View>
@@ -63,24 +90,67 @@ const styles = StyleSheet.create({
         borderRadius: 15,
         backgroundColor: 'white',
         elevation: 4,
+        position: 'relative',
     },
-    Success: {
-        justifyContent: 'center',
-        alignItems: 'center'
-    },
-    modalIcon: {
+    closeBtn: {
         backgroundColor: Colors.DEFAULT_RED,
-        height: 100,
-        width: 100,
+        position: 'absolute',
+        left: '45%',
+        top: -40,
         borderRadius: 100,
         justifyContent: 'center',
-        alignItems: 'center',
-        position: 'absolute',
-        top: -100
+        zIndex: 1,
+        height: 90,
+        width: 90,
+        alignItems: 'center'
     },
-    modalContent:{
-        paddingTop:20
-    }
+    modalformHeading: {
+        textTransform: 'uppercase',
+        fontSize: 16,
+        letterSpacing: 1,
+        fontWeight: '700',
+        lineHeight: 20,
+        color: '#333',
+        marginBottom: 20,
+        borderBottomWidth: 1,
+        borderBottomColor: '#ccc',
+        borderStyle: 'solid',
+        textAlign: 'center'
+    },
+    MainCont: {
+        marginTop: 10,
+    },
+    MainContCard: {
+        display: 'flex',
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        marginBottom: 20
+    },
+    MainContTextL: {
+        flex: 1,
+        color: '#6e6e6e'
+    },
+    MainContTextR: {
+        flex: 1,
+        fontWeight: '600',
+    },
+    btnCommon1: {
+        height: 40,
+        borderRadius: 5,
+        backgroundColor: Colors.DEFAULT_RED,
+        shadowColor: '#000',
+        shadowOffset: { width: 4, height: 5 },
+        shadowOpacity: 0.27,
+        shadowRadius: -3,
+        elevation: 4,
+        alignItems: 'center',
+        justifyContent: 'center',
+    },
+    btnTextCommon1: {
+        color: '#fcfcfc',
+        fontWeight: 'bold',
+        fontSize: 17,
+    },
 })
 
 export default memo(OverTimeModal)

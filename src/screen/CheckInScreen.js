@@ -39,10 +39,10 @@ const CheckInScreen = ({ navigation }) => {
             dispatch(apiCheckIn(data))
                 .then((result) => {
                     if (result.payload.statusCode === 200) {
-                        setData(result.payload.data)
+                        setData(result.payload)
                         setOpenModal(true)
                     } else {
-                        setData(result.payload.data)
+                        setData(result.payload)
                         setOpenModalF(true)
                     }
                 })
@@ -58,7 +58,10 @@ const CheckInScreen = ({ navigation }) => {
                 style={StyleSheet.absoluteFillObject}
                 onBarCodeScanned={scanData ? undefined : handleBarCodeScanned}
             />
-            {scanData && <Button title='Scan Again?' onPress={() => setScanData(undefined)} />}
+            {scanData && 
+            <View style={styles.buttonAgain}>
+                <Button title='Scan Again?' color="#fff" onPress={() => setScanData(undefined)} />
+            </View>}
             <StatusBar style="auto" />
             <View style={styles.buttonTranferGate}>
                 <Button
@@ -101,6 +104,19 @@ const styles = StyleSheet.create({
         borderRadius: 5,
         backgroundColor: '#fff',
         shadowColor: '#fff',
+        shadowOffset: { width: 4, height: 5 },
+        shadowOpacity: 0.27,
+        shadowRadius: -3,
+        elevation: 4,
+        alignItems: 'center',
+        justifyContent: 'center',
+        marginTop: 20
+    },
+    buttonAgain: {
+        height: 40,
+        borderRadius: 5,
+        backgroundColor: '#02aab0',
+        shadowColor: '#02aab0',
         shadowOffset: { width: 4, height: 5 },
         shadowOpacity: 0.27,
         shadowRadius: -3,

@@ -5,7 +5,17 @@ import { ApiContans } from '../contants';
 export const apiCheckIn = createAsyncThunk('checkin/apiCheckIn', async (bookingid) => {
   try {
     const response = await axios.get(
-      `${ApiContans.BACKEND_API.BASE_API_URL}/checkQR/checkInViaQR/`+bookingid);
+      `${ApiContans.BACKEND_API.BASE_API_URL}/checkQR/checkInViaQR/` + bookingid);
+    return response.data;
+  } catch (error) {
+    throw error.response.data;
+  }
+});
+
+export const apiCheckOut = createAsyncThunk('checkin/apiCheckOut', async (bookingid) => {
+  try {
+    const response = await axios.get(
+      `${ApiContans.BACKEND_API.BASE_API_URL}/checkQR/checkOutViaQR/` + bookingid);
     return response.data;
   } catch (error) {
     throw error.response.data;
@@ -29,6 +39,16 @@ const checkInSlice = createSlice({
         state.loading = false;
       })
       .addCase(apiCheckIn.rejected, (state) => {
+        state.loading = false;
+      })
+      // Check Out
+      .addCase(apiCheckOut.pending, (state) => {
+        state.loading = true;
+      })
+      .addCase(apiCheckOut.fulfilled, (state, action) => {
+        state.loading = false;
+      })
+      .addCase(apiCheckOut.rejected, (state) => {
         state.loading = false;
       })
   },
