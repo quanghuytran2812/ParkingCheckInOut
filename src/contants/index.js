@@ -1,2 +1,4 @@
 import Colors from "./Colors";
-export {Colors};
+import ApiContans from "./ApiContans";
+
+export {Colors, ApiContans};
