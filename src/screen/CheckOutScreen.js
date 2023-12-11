@@ -11,6 +11,7 @@ const CheckOutScreen = () => {
     const dispatch = useDispatch();
     const [openModal, setOpenModal] = useState(false);
     const [openModalF, setOpenModalF] = useState(false);
+    const [scannerEnabled, setScannerEnabled] = useState(true);
 
     const [data, setData] = useState({});
     const [hasPermission, setHasPermission] = React.useState(false);
@@ -22,6 +23,10 @@ const CheckOutScreen = () => {
             setHasPermission(status === "granted");
         })();
     }, []);
+
+    const handleToggleScanner = () => {
+        setScannerEnabled(!scannerEnabled);
+    };
 
     if (!hasPermission) {
         return (
@@ -52,14 +57,24 @@ const CheckOutScreen = () => {
 
     return (
         <SafeAreaView style={styles.container}>
-            <BarCodeScanner
-                style={StyleSheet.absoluteFillObject}
-                onBarCodeScanned={scanData ? undefined : handleBarCodeScanned}
+            {scannerEnabled ? (
+                <>
+                    <BarCodeScanner
+                        style={StyleSheet.absoluteFillObject}
+                        onBarCodeScanned={scanData ? undefined : handleBarCodeScanned}
+                    />
+                    {scanData &&
+                        <View style={styles.buttonAgain}>
+                            <Button title='Scan Again?' buttonStyle={styles.buttonAgain} onPress={() => setScanData(undefined)} />
+                        </View>}
+                </>
+            ) : (
+                <Text>Scanner is turned off.</Text>
+            )}
+            <Button
+                title={scannerEnabled ? 'Turn Off Scanner' : 'Turn On Scanner'}
+                onPress={handleToggleScanner}
             />
-            {scanData && 
-            <View style={styles.buttonAgain}>
-                <Button title='Scan Again?' color="#fff" onPress={() => setScanData(undefined)} />
-            </View>}
             <StatusBar style="auto" />
             <Modal
                 transparent={true}
@@ -93,7 +108,6 @@ const styles = StyleSheet.create({
     buttonAgain: {
         height: 40,
         borderRadius: 5,
-        backgroundColor: '#02aab0',
         shadowColor: '#02aab0',
         shadowOffset: { width: 4, height: 5 },
         shadowOpacity: 0.27,
@@ -101,7 +115,8 @@ const styles = StyleSheet.create({
         elevation: 4,
         alignItems: 'center',
         justifyContent: 'center',
-        marginTop: 20
+        marginTop: 20,
+        marginBottom: 20
     }
 });
 export default CheckOutScreen;
