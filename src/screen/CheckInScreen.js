@@ -1,14 +1,13 @@
 import { StatusBar } from 'expo-status-bar';
 import { StyleSheet, Text, View, Button } from 'react-native';
 import React, { useEffect, useState } from 'react';
-import { Camera } from 'expo-camera';
+import { BarCodeScanner } from 'expo-barcode-scanner';
 import { useDispatch } from 'react-redux';
 import { apiCheckIn } from '../store/checkInSlice';
 import { SafeAreaView } from 'react-native';
 import { Modal } from 'react-native';
 import FailModal from '../Modal/FailModal';
 import SuccessModal from '../Modal/SuccessModal';
-import { BarCodeScanner } from 'expo-barcode-scanner';
 
 const CheckInScreen = ({ navigation }) => {
     const dispatch = useDispatch();
@@ -22,7 +21,7 @@ const CheckInScreen = ({ navigation }) => {
 
     useEffect(() => {
         (async () => {
-            const { status } = await Camera.requestCameraPermissionsAsync();
+            const { status } = await BarCodeScanner.requestPermissionsAsync();
             setHasPermission(status === "granted");
         })();
     }, [hasPermission]);
@@ -63,10 +62,7 @@ const CheckInScreen = ({ navigation }) => {
         <SafeAreaView style={styles.container}>
             {scannerEnabled ? (
                 <>
-                    <Camera
-                        barCodeScannerSettings={{
-                            barCodeTypes: [BarCodeScanner.Constants.BarCodeType.qr]
-                        }}
+                    <BarCodeScanner
                         style={StyleSheet.absoluteFillObject}
                         onBarCodeScanned={scanData ? undefined : handleBarCodeScanned}
                     />
