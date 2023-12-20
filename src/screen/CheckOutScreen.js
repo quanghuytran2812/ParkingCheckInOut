@@ -6,6 +6,7 @@ import { useDispatch } from 'react-redux';
 import OnTimeModal from '../Modal/OnTimeModal';
 import OverTimeModal from '../Modal/OverTimeModal';
 import { apiCheckOut } from '../store/checkInSlice';
+import { BarCodeScanner } from 'expo-barcode-scanner';
 
 const CheckOutScreen = () => {
     const dispatch = useDispatch();
@@ -60,6 +61,9 @@ const CheckOutScreen = () => {
             {scannerEnabled ? (
                 <>
                     <Camera
+                        barCodeScannerSettings={{
+                            barCodeTypes: [BarCodeScanner.Constants.BarCodeType.qr]
+                        }}
                         style={StyleSheet.absoluteFillObject}
                         onBarCodeScanned={scanData ? undefined : handleBarCodeScanned}
                     />

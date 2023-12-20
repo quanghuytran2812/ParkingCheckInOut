@@ -21,7 +21,10 @@
       "adaptiveIcon": {
         "foregroundImage": "./assets/iconHT.png",
         "backgroundColor": "#ffffff"
-      }
+      },
+      "permissions": [
+        "CAMERA"
+      ]
     },
     "web": {
       "favicon": "./assets/favicon.png"

@@ -8,6 +8,7 @@ import { SafeAreaView } from 'react-native';
 import { Modal } from 'react-native';
 import FailModal from '../Modal/FailModal';
 import SuccessModal from '../Modal/SuccessModal';
+import { BarCodeScanner } from 'expo-barcode-scanner';
 
 const CheckInScreen = ({ navigation }) => {
     const dispatch = useDispatch();
@@ -63,6 +64,9 @@ const CheckInScreen = ({ navigation }) => {
             {scannerEnabled ? (
                 <>
                     <Camera
+                        barCodeScannerSettings={{
+                            barCodeTypes: [BarCodeScanner.Constants.BarCodeType.qr]
+                        }}
                         style={StyleSheet.absoluteFillObject}
                         onBarCodeScanned={scanData ? undefined : handleBarCodeScanned}
                     />
